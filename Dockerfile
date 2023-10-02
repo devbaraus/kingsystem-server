@@ -52,6 +52,6 @@ ENV NODE_ENV production
 
 COPY --chown=node:node --from=build /app/node_modules ./node_modules
 COPY --chown=node:node --from=build /app/dist ./dist
-COPY --chown=node:node --from=build /app/prisma ./prismas
+COPY --chown=node:node --from=build /app/prisma ./prisma
 
 CMD [ "node", "dist/main.js" ]
