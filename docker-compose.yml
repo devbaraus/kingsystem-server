@@ -11,6 +11,7 @@ services:
     extends:
       file: docker-common.yml
       service: nest
+    working_dir: /app
     command: sh -c "npx prisma migrate deploy && npm run start:prod"
 
 volumes:
