@@ -5,6 +5,8 @@ services:
     extends:
       file: docker-common.yml
       service: db
+    ports:
+      - ${DATABASE_PORT}:5432
     volumes:
       - kingsystem_db_dev:/var/lib/postgresql/data
   nest:

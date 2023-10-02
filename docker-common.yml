@@ -8,8 +8,6 @@ services:
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASS}
       POSTGRES_DB: ${DATABASE_NAME}
-    ports:
-      - ${DATABASE_PORT}:5432
     healthcheck:
       test: [ "CMD", "pg_isready", "-d", "${DATABASE_NAME}", "-U", "${DATABASE_USER}" ]
       interval: 5s
