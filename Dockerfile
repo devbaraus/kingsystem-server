@@ -8,6 +8,8 @@ WORKDIR /app
 
 COPY --chown=node:node package*.json ./
 
+ENV NODE_ENV development
+
 RUN npx prisma generate
 
 RUN npm ci
