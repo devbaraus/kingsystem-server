@@ -21,6 +21,6 @@ jobs:
             && git checkout main \
             && git pull \
             && docker compose build \
-            && docker compose -f docker-compose.yml down \
-            && docker compose -f docker-compose.yaml up -d
+            && docker compose down \
+            && docker compose up -d
 
