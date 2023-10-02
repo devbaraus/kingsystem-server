@@ -1,3 +1,5 @@
+[![Deploy Server](https://github.com/devbaraus/kingsystem-server/actions/workflows/deploy.yml/badge.svg)](https://github.com/devbaraus/kingsystem-server/actions/workflows/deploy.yml)
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
