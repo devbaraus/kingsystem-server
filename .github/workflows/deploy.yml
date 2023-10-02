@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: getting latest changes
+      - name: Build and deploy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VM_HOST }}
@@ -18,6 +18,8 @@ jobs:
           key: ${{ secrets.VM_PRIVATE_KEY }}
           script: |
             cd /home/${{ secrets.VM_USER }}/kingsystem-server \
+            && git checkout main \
+            && git pull \
             && docker compose build \
             && docker compose -f docker-compose.yml down \
             && docker compose -f docker-compose.yaml up -d
