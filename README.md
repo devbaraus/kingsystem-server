@@ -32,30 +32,22 @@
 $ npm install
 ```
 
-## Running the app
+## Production
 
 ```bash
-# development
-$ npm run start
+docker compose up --build
+```
 
-# watch mode
-$ npm run start:dev
+## Development
 
-# production mode
-$ npm run start:prod
+```bash
+docker compose -f docker-compose.dev.yml up --build
 ```
 
 ## Test
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+docker compose -f docker-compose.test.yml up --build --exit-code-from nest
 ```
 
 ## Support
