@@ -1,4 +1,4 @@
-name: test and deploy CORE
+name: Deploy Server
 
 on:
   push:
