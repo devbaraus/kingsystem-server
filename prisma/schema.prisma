@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int      @id @default(autoincrement())
+  name             String?  @db.VarChar(100)
+  email            String   @unique @db.VarChar(100)
+  passwordHash     String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  systemsCreatedBy System[] @relation("CreatedByUser")
+  systemsUpdatedBy System[] @relation("UpdatedByUser")
+}
+
+enum SystemStatus {
+  ACTIVE
+  CANCELED
+}
+
+model System {
+  id           Int          @id @default(autoincrement())
+  acronym      String       @unique @db.VarChar(10)
+  description  String       @db.VarChar(100)
+  email        String?      @db.VarChar(100)
+  url          String?      @db.VarChar(50)
+  status       SystemStatus @default(ACTIVE)
+  updateReason String?      @db.VarChar(500)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  createdById  Int?
+  createdBy    User?        @relation("CreatedByUser", fields: [createdById], references: [id])
+  updatedById  Int?
+  updatedBy    User?        @relation("UpdatedByUser", fields: [updatedById], references: [id])
+}
