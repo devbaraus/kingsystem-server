@@ -5,14 +5,17 @@ import {
   Param,
   Patch,
   Post,
+  Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SystemService } from './system.service';
 import { CreateSystemDto, UpdateSystemDto } from './dto';
-import { Prisma } from '@prisma/client';
 import { JwtGuard } from '../auth/guard';
 import { GetUser } from '../auth/decorator';
+import { PaginateQueryDto } from '../dto/paginate-query.dto';
+import { Request } from 'express';
 
 @UseGuards(JwtGuard)
 @ApiTags('system')
@@ -22,7 +25,7 @@ export class SystemController {
 
   @Post('')
   async create(@GetUser('id') userId: number, @Body() dto: CreateSystemDto) {
-    return this.service.create(userId, dto);
+    return this.service.create(dto, userId);
   }
 
   @Patch(':id')
@@ -32,43 +35,20 @@ export class SystemController {
     @Body()
     dto: UpdateSystemDto,
   ) {
-    return this.service.update(id, userId, dto);
+    return this.service.update(id, dto, userId);
   }
 
   @Get()
   findMany(
-    @Param()
-    params: {
-      skip?: number;
-      take?: number;
-      cursor?: Prisma.SystemWhereUniqueInput;
-      where?: Prisma.SystemWhereInput;
-      orderBy?: Prisma.SystemOrderByWithRelationInput;
-    },
+    @Query()
+    params: PaginateQueryDto,
+    @Req() req: Request,
   ) {
-    const { skip = 0, take = 50, cursor, where, orderBy } = params;
-    return this.service.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-    });
+    return this.service.findManyAndPaginate(params, req.path);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.service.findOne(id);
   }
-
-  //
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return this.service.update(+id, updateUserDto);
-  // }
-  //
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.service.remove(+id);
-  // }
 }

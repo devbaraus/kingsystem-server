@@ -7,12 +7,17 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateSystemDto, UpdateSystemDto } from './dto';
 import { Prisma, System, SystemStatus } from '@prisma/client';
+import { PaginateQueryDto } from '../dto/paginate-query.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class SystemService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly config: ConfigService,
+  ) {}
 
-  async create(userId: number, dto: CreateSystemDto): Promise<System> {
+  async create(dto: CreateSystemDto, currentUserId: number): Promise<System> {
     try {
       return await this.prisma.system.create({
         data: {
@@ -21,7 +26,7 @@ export class SystemService {
           email: dto.email,
           url: dto.url,
           status: SystemStatus.ACTIVE,
-          createdById: userId,
+          createdById: currentUserId,
         },
       });
     } catch (err) {
@@ -35,16 +40,9 @@ export class SystemService {
     }
   }
 
-  async findMany(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.SystemWhereUniqueInput;
-    where?: Prisma.SystemWhereInput;
-    orderBy?: Prisma.SystemOrderByWithRelationInput;
-  }) {
+  findManyAndPaginate(query: PaginateQueryDto, pathname: string) {
     try {
-      const systems: System[] = await this.prisma.system.findMany(params);
-      return systems;
+      return this.prisma.paginate<System>(this.prisma.system, query, pathname);
     } catch (err) {
       console.log(err);
       throw new BadRequestException('Something went wrong');
@@ -63,7 +61,7 @@ export class SystemService {
     return system;
   }
 
-  async update(id: string, userId: number, dto: UpdateSystemDto) {
+  async update(id: string, dto: UpdateSystemDto, currentUserId: number) {
     try {
       const system = await this.prisma.system.update({
         where: {
@@ -74,7 +72,7 @@ export class SystemService {
           url: dto.url,
           updateReason: dto.reason,
           status: dto.status,
-          updatedById: userId,
+          updatedById: currentUserId,
         },
       });
 
