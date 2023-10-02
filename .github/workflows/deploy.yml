@@ -1,0 +1,24 @@
+name: test and deploy CORE
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: getting latest changes
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_PRIVATE_KEY }}
+          script: |
+            cd /home/${{ secrets.VM_USER }}/kingsystem-server \
+            && docker compose build \
+            && docker compose -f docker-compose.yml down \
+            && docker compose -f docker-compose.yaml up -d
+
