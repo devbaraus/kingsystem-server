@@ -125,60 +125,6 @@ describe('AppController (e2e)', () => {
           .expectStatus(200);
       });
     });
-
-    describe('Update user', () => {
-      const updateUserDto: UpdateUserDto = {
-        name: 'Mock Name',
-        email: 'mock@mock.com',
-      };
-
-      it('should throw if without auth', () => {
-        return pactum
-          .spec()
-          .patch('/user')
-          .withBody(updateUserDto)
-          .expectStatus(401);
-      });
-
-      it('should update user with only email', () => {
-        return pactum
-          .spec()
-          .patch('/user')
-          .withHeaders({
-            Authorization: 'Bearer $S{userAt}',
-          })
-          .withBody({
-            email: updateUserDto.email,
-          })
-          .expectStatus(200);
-      });
-
-      it('should update user with only name', () => {
-        return pactum
-          .spec()
-          .patch('/user')
-          .withHeaders({
-            Authorization: 'Bearer $S{userAt}',
-          })
-          .withBody({
-            name: updateUserDto.name,
-          })
-          .expectStatus(200);
-      });
-
-      it('should update user', () => {
-        return pactum
-          .spec()
-          .patch('/user')
-          .withHeaders({
-            Authorization: 'Bearer $S{userAt}',
-          })
-          .withBody(updateUserDto)
-          .expectStatus(200)
-          .expectBodyContains(updateUserDto.name)
-          .expectBodyContains(updateUserDto.email);
-      });
-    });
   });
 
   describe('System', () => {

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiOkResponse,
@@ -10,7 +10,7 @@ import { GetUser } from '../auth/decorator';
 import { JwtGuard } from '../auth/guard';
 import { User } from '@prisma/client';
 import { UserService } from './user.service';
-import { UpdateUserDto, UserDto } from './dto';
+import { UserDto } from './dto';
 
 @UseGuards(JwtGuard)
 @ApiTags('user')
@@ -32,15 +32,5 @@ export class UserController {
   @Get('me')
   async me(@GetUser() user: User) {
     return user;
-  }
-
-  @ApiOperation({ summary: 'Update current user' })
-  @ApiOkResponse({
-    description: 'success',
-    type: UserDto,
-  })
-  @Put()
-  update(@GetUser('id') userId: number, @Body() dto: UpdateUserDto) {
-    return this.service.update(userId, dto);
   }
 }
