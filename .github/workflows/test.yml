@@ -26,6 +26,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Create .env file
+        run: |
+          echo "DATABASE_NAME=${DATABASE_NAME}" >> .env \
+          echo "DATABASE_PASS=${DATABASE_PASS}" >> .env \
+          echo "DATABASE_USER=${DATABASE_USER}" >> .env \
+          echo "DATABASE_PORT=${DATABASE_PORT}" >> .env \
+          echo "DATABASE_HOST=${DATABASE_HOST}" >> .env \
+          echo "DATABASE_URL=${DATABASE_URL}" >> .env \
+          echo "JWT_SECRET=${JWT_SECRET}" >> .env \
+          echo "JWT_EXPIRES_IN=${JWT_EXPIRES_IN}" >> .env \
+          echo "APP_PORT=${APP_PORT}" >> .env \
+          echo "APP_PAGE_SIZE=${APP_PAGE_SIZE}" >> .env
+
       - name: Build docker images
         run: docker compose build
 
