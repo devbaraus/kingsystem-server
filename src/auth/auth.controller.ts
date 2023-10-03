@@ -1,6 +1,6 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from "@nestjs/common";
 import { AuthService } from './auth.service';
-import { AuthDto, SignAuthDto } from './dto';
+import { AuthDto, SignAuthDto, UserDto } from "./dto";
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
@@ -11,8 +11,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-@ApiTags('auth')
-@Controller('auth')
+import { GetUser } from "./decorator";
+import { User } from "@prisma/client";
+import { AuthGuard } from "@nestjs/passport";
+import { JwtGuard } from "./guard";
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -47,5 +49,16 @@ export class AuthController {
   @Post('signin')
   async signIn(@Body() body: SignAuthDto) {
     return this.authService.signIn(body);
+  }
+
+  @UseGuards(JwtGuard)
+  @ApiOperation({ summary: "Get current user" })
+  @ApiOkResponse({
+    description: "success",
+    type: UserDto,
+  })
+  @Get("profile")
+  async profile(@GetUser() user: User) {
+    return user;
   }
 }
