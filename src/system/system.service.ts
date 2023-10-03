@@ -8,15 +8,11 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateSystemDto, UpdateSystemDto } from './dto';
 import { Prisma, System, SystemStatus } from '@prisma/client';
-import { PaginateQueryDto } from '../dto/paginate-query.dto';
-import { ConfigService } from '@nestjs/config';
+import { PaginationQueryDto } from '../dto/pagination-query.dto';
 
 @Injectable()
 export class SystemService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly config: ConfigService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(dto: CreateSystemDto, currentUserId: number): Promise<System> {
     try {
@@ -41,7 +37,7 @@ export class SystemService {
     }
   }
 
-  findManyAndPaginate(query: PaginateQueryDto, pathname: string) {
+  findManyAndPaginate(query: PaginationQueryDto, pathname: string) {
     try {
       return this.prisma.paginate<System>(this.prisma.system, query, pathname);
     } catch (err) {
