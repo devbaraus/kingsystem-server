@@ -40,8 +40,9 @@ jobs:
 
       - name: Create coverage directory
         run: |
-          mkdir coverage && \
-          sudo chmod -R 777 coverage
+          mkdir test/coverage && \
+          sudo chown -R $USER:$USER test/coverage && \
+          sudo chmod -R 777 test/coverage
 
       - name: Build docker images
         run: docker compose build
