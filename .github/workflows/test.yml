@@ -39,6 +39,9 @@ jobs:
           echo "APP_PORT=${APP_PORT}\n" >> .env \
           echo "APP_PAGE_SIZE=${APP_PAGE_SIZE}" >> .env
 
+      - name: Cat .env file
+        run: cat .env
+
       - name: Build docker images
         run: docker compose build
 
