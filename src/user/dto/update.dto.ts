@@ -13,6 +13,7 @@ export class UpdateUserDto {
   @MaxLength(100)
   name: string;
 
+  @IsOptional()
   @IsEmail()
   @MaxLength(100)
   email?: string;

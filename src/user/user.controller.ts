@@ -1,42 +1,45 @@
+import { Body, Controller, Get, Put, UseGuards } from '@nestjs/common';
 import {
-  Body,
-  Controller,
-  Get,
-  Patch,
-  Query,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { GetUser } from '../auth/decorator';
 import { JwtGuard } from '../auth/guard';
 import { User } from '@prisma/client';
 import { UserService } from './user.service';
-import { UpdateUserDto } from './dto/update.dto';
-import { PaginateQueryDto } from '../dto/paginate-query.dto';
-import { Request } from 'express';
+import { UpdateUserDto, UserDto } from './dto';
 
 @UseGuards(JwtGuard)
 @ApiTags('user')
+@ApiUnauthorizedResponse({
+  description: 'unauthorized',
+})
+@ApiBadRequestResponse({
+  description: 'bad request',
+})
 @Controller('user')
 export class UserController {
   constructor(private readonly service: UserService) {}
 
+  @ApiOperation({ summary: 'Get current user' })
+  @ApiOkResponse({
+    description: 'success',
+    type: UserDto,
+  })
   @Get('me')
   async me(@GetUser() user: User) {
     return user;
   }
 
-  @Get()
-  findMany(
-    @Query()
-    params: PaginateQueryDto,
-    @Req() req: Request,
-  ) {
-    return this.service.findManyAndPaginate(params, req.path);
-  }
-
-  @Patch()
+  @ApiOperation({ summary: 'Update current user' })
+  @ApiOkResponse({
+    description: 'success',
+    type: UserDto,
+  })
+  @Put()
   update(@GetUser('id') userId: number, @Body() dto: UpdateUserDto) {
     return this.service.update(userId, dto);
   }
