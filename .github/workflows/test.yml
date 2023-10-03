@@ -27,16 +27,16 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo -e "DATABASE_NAME=${DATABASE_NAME}\n" >> .env \
-          echo -e "DATABASE_PASS=${DATABASE_PASS}\n" >> .env \
-          echo -e "DATABASE_USER=${DATABASE_USER}\n" >> .env \
-          echo -e "DATABASE_PORT=${DATABASE_PORT}\n" >> .env \
-          echo -e "DATABASE_HOST=${DATABASE_HOST}\n" >> .env \
-          echo -e "DATABASE_URL=\"postgresql://${DATABASE_USER}:${DATABASE_PASS}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?schema=public\"\n" >> .env \
-          echo -e "JWT_SECRET=${JWT_SECRET}\n" >> .env \
-          echo -e "JWT_EXPIRES_IN=${JWT_EXPIRES_IN}\n" >> .env \
-          echo -e "APP_PORT=${APP_PORT}\n" >> .env \
-          echo -e "APP_PAGE_SIZE=${APP_PAGE_SIZE}" >> .env
+          echo "DATABASE_NAME=${DATABASE_NAME}" >> .env && \
+          echo "DATABASE_PASS=${DATABASE_PASS}" >> .env && \
+          echo "DATABASE_USER=${DATABASE_USER}" >> .env && \
+          echo "DATABASE_PORT=${DATABASE_PORT}" >> .env && \
+          echo "DATABASE_HOST=${DATABASE_HOST}" >> .env && \
+          echo "DATABASE_URL=\"postgresql://${DATABASE_USER}:${DATABASE_PASS}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?schema=public\"" >> .env && \
+          echo "JWT_SECRET=${JWT_SECRET}" >> .env && \
+          echo "JWT_EXPIRES_IN=${JWT_EXPIRES_IN}" >> .env && \
+          echo "APP_PORT=${APP_PORT}" >> .env && \
+          echo "APP_PAGE_SIZE=${APP_PAGE_SIZE}" >> .env
 
       - name: Cat .env file
         run: cat .env
