@@ -40,10 +40,8 @@ jobs:
 
       - name: Create coverage directory
         run: |
-          echo $PWD && \
           mkdir coverage && \
-          ls -la
-
+          sudo chmod -R 777 coverage
 
       - name: Build docker images
         run: docker compose build
