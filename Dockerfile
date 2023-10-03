@@ -14,6 +14,8 @@ RUN npx prisma generate
 
 RUN npm ci
 
+RUN chown -R node:node /app/node_modules
+
 COPY --chown=node:node . .
 
 USER node
