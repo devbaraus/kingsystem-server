@@ -39,7 +39,11 @@ jobs:
           echo "APP_PAGE_SIZE=${APP_PAGE_SIZE}" >> .env
 
       - name: Create coverage directory
-        run: mkdir coverage
+        run: |
+          echo $PWD && \
+          mkdir coverage && \
+          ls -la
+
 
       - name: Build docker images
         run: docker compose build
