@@ -1,11 +1,19 @@
-import { NestFactory } from "@nestjs/core";
+import { HttpAdapterHost, NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { ValidationPipe } from "@nestjs/common";
 import { AppModule } from "./app.module";
 import * as morgan from "morgan";
+import * as Sentry from "@sentry/node";
+import { SentryFilter } from "./filter";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  Sentry.init({
+    dsn: process.env.NODE_ENV === "production" ? process.env.SENTRY_DSN || "" : undefined,
+    tracesSampleRate: 1.0,
+    profilesSampleRate: 1.0,
+  });
 
   const config = new DocumentBuilder()
     .setTitle("KingSystem API")
@@ -16,6 +24,9 @@ async function bootstrap() {
   SwaggerModule.setup("", app, document);
 
   app.use(morgan("tiny", { skip: () => process.env.NODE_ENV === "production" }));
+
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new SentryFilter(httpAdapter));
 
   app.useGlobalPipes(
     new ValidationPipe({
