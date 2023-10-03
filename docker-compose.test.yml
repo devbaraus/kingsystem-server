@@ -16,6 +16,20 @@ services:
     build:
       context: .
       target: development
+    working_dir: /app
+    command: sh -c "npm run prisma:migrate && npm run start:dev"
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    volumes:
+      - .:/app
+  test:
+    extends:
+      file: docker-common.yml
+      service: nest
+    container_name: kingsystem_test
+    build:
+      context: .
+      target: development
     restart: no
     working_dir: /app
     command: sh -c "npm run prisma:reset && npm run test:e2e"

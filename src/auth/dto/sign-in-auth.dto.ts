@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsStrongPassword } from "class-validator";
 
-export class SignAuthDto {
+export class SignInAuthDto {
   @IsEmail()
   email: string;
 

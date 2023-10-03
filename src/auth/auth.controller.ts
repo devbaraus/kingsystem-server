@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { AuthDto, SignAuthDto, UserDto } from "./dto";
+import { AuthDto, SignInAuthDto, SignUpAuthDto, UserDto } from "./dto";
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
@@ -33,7 +33,7 @@ export class AuthController {
     description: "bad request",
   })
   @Post("signup")
-  async signUp(@Body() body: SignAuthDto) {
+  async signUp(@Body() body: SignUpAuthDto) {
     return this.authService.signUp(body);
   }
 
@@ -50,7 +50,7 @@ export class AuthController {
   })
   @HttpCode(HttpStatus.OK)
   @Post("signin")
-  async signIn(@Body() body: SignAuthDto) {
+  async signIn(@Body() body: SignInAuthDto) {
     return this.authService.signIn(body);
   }
 
