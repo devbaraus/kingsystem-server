@@ -15,7 +15,7 @@ jobs:
       DATABASE_USER: "kingsystem"
       DATABASE_PORT: 5432
       DATABASE_HOST: db
-      DATABASE_URL: "postgresql://${DATABASE_USER}:${DATABASE_PASS}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?schema=public"
+      DATABASE_URL: "postgresql://kingsystem:kingsystem@db:5432/kingsystem?schema=public"
       JWT_SECRET: "secret"
       JWT_EXPIRES_IN: "1d"
       APP_PORT: 3000
