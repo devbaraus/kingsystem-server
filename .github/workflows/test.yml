@@ -28,19 +28,16 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "DATABASE_NAME=${DATABASE_NAME}" >> .env \
-          echo "DATABASE_PASS=${DATABASE_PASS}" >> .env \
-          echo "DATABASE_USER=${DATABASE_USER}" >> .env \
-          echo "DATABASE_PORT=${DATABASE_PORT}" >> .env \
-          echo "DATABASE_HOST=${DATABASE_HOST}" >> .env \
-          echo "DATABASE_URL=${DATABASE_URL}" >> .env \
-          echo "JWT_SECRET=${JWT_SECRET}" >> .env \
-          echo "JWT_EXPIRES_IN=${JWT_EXPIRES_IN}" >> .env \
-          echo "APP_PORT=${APP_PORT}" >> .env \
+          echo "DATABASE_NAME=${DATABASE_NAME}\n" >> .env \
+          echo "DATABASE_PASS=${DATABASE_PASS}\n" >> .env \
+          echo "DATABASE_USER=${DATABASE_USER}\n" >> .env \
+          echo "DATABASE_PORT=${DATABASE_PORT}\n" >> .env \
+          echo "DATABASE_HOST=${DATABASE_HOST}\n" >> .env \
+          echo "DATABASE_URL=${DATABASE_URL}\n" >> .env \
+          echo "JWT_SECRET=${JWT_SECRET}\n" >> .env \
+          echo "JWT_EXPIRES_IN=${JWT_EXPIRES_IN}\n" >> .env \
+          echo "APP_PORT=${APP_PORT}\n" >> .env \
           echo "APP_PAGE_SIZE=${APP_PAGE_SIZE}" >> .env
-
-      - name: Cat .env file
-        run: cat .env
 
       - name: Build docker images
         run: docker compose build
@@ -52,3 +49,8 @@ jobs:
         uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          directory: ./coverage
+          name: codecov-umbrella
+          fail_ci_if_error: true
+          verbose: true
