@@ -3,7 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as pactum from 'pactum';
 import { SignAuthDto } from '../src/auth/dto';
 import { AppModule } from '../src/app.module';
-import { UpdateUserDto } from '../src/user/dto';
+import { CreateSystemDto, UpdateSystemDto } from "../src/system/dto";
 import { CreateSystemDto, UpdateSystemDto } from '../src/system/dto';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { System, SystemStatus } from '@prisma/client';
