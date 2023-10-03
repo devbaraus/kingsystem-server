@@ -38,8 +38,8 @@ jobs:
           echo "APP_PORT=${APP_PORT}" >> .env && \
           echo "APP_PAGE_SIZE=${APP_PAGE_SIZE}" >> .env
 
-      - name: Cat .env file
-        run: cat .env
+      - name: Create coverage directory
+        run: mkdir coverage
 
       - name: Build docker images
         run: docker compose build
