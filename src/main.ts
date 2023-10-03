@@ -1,23 +1,21 @@
-import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
-import { AppModule } from './app.module';
-import * as morgan from 'morgan';
+import { NestFactory } from "@nestjs/core";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { ValidationPipe } from "@nestjs/common";
+import { AppModule } from "./app.module";
+import * as morgan from "morgan";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('KingSystem API')
-    .setDescription('A KingSystem API to control your system')
-    .setVersion('v1')
+    .setTitle("KingSystem API")
+    .setDescription("A KingSystem API to control your system")
+    .setVersion("v1")
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('', app, document);
+  SwaggerModule.setup("", app, document);
 
-  app.use(
-    morgan('tiny', { skip: () => process.env.NODE_ENV === 'production' }),
-  );
+  app.use(morgan("tiny", { skip: () => process.env.NODE_ENV === "production" }));
 
   app.useGlobalPipes(
     new ValidationPipe({

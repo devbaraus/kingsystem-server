@@ -1,14 +1,13 @@
 import {
   BadRequestException,
   ConflictException,
-  ForbiddenException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreateSystemDto, UpdateSystemDto } from './dto';
-import { Prisma, System, SystemStatus } from '@prisma/client';
-import { PaginationQueryDto } from '../dto/pagination-query.dto';
+} from "@nestjs/common";
+import { PrismaService } from "../prisma/prisma.service";
+import { CreateSystemDto, UpdateSystemDto } from "./dto";
+import { Prisma, System, SystemStatus } from "@prisma/client";
+import { PaginationQueryDto } from "../dto";
 
 @Injectable()
 export class SystemService {
@@ -28,12 +27,12 @@ export class SystemService {
       });
     } catch (err) {
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
-        if (err.code === 'P2002') {
-          throw new ConflictException('System already exists');
+        if (err.code === "P2002") {
+          throw new ConflictException("System already exists");
         }
       }
 
-      throw new BadRequestException('Something went wrong');
+      throw new BadRequestException("Something went wrong");
     }
   }
 
@@ -41,8 +40,7 @@ export class SystemService {
     try {
       return this.prisma.paginate<System>(this.prisma.system, query, pathname);
     } catch (err) {
-      console.log(err);
-      throw new BadRequestException('Something went wrong');
+      throw new BadRequestException("Something went wrong");
     }
   }
 
@@ -52,7 +50,7 @@ export class SystemService {
     });
 
     if (!system) {
-      throw new NotFoundException('System not found');
+      throw new NotFoundException("System not found");
     }
 
     return system;
@@ -60,7 +58,7 @@ export class SystemService {
 
   async update(id: string, dto: UpdateSystemDto, currentUserId: number) {
     try {
-      const system = await this.prisma.system.update({
+      return await this.prisma.system.update({
         where: {
           id: parseInt(id),
         },
@@ -72,11 +70,8 @@ export class SystemService {
           updatedById: currentUserId,
         },
       });
-
-      return system;
     } catch (err) {
-      console.log(err);
-      throw new BadRequestException('Something went wrong');
+      throw new BadRequestException("Something went wrong");
     }
   }
 }

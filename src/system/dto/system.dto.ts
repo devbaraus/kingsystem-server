@@ -1,5 +1,5 @@
-import { System, SystemStatus } from '@prisma/client';
-import { ApiProperty } from '@nestjs/swagger';
+import { System, SystemStatus } from "@prisma/client";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class SystemDto implements System {
   acronym: string;
@@ -9,7 +9,7 @@ export class SystemDto implements System {
   email: string | null;
   id: number;
 
-  @ApiProperty({ type: 'enum', enum: SystemStatus })
+  @ApiProperty({ type: "enum", enum: SystemStatus })
   status: SystemStatus;
   updateReason: string | null;
   updatedAt: Date;
