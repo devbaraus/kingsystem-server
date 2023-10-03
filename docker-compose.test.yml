@@ -32,7 +32,7 @@ services:
       target: development
     restart: no
     working_dir: /app
-    command: sh -c "npm run prisma:reset && npm run test:e2e-watch"
+    command: sh -c "npm run prisma:reset && npm run test:e2e"
     volumes:
       - ./test:/app/test
 
