@@ -1,8 +1,10 @@
 import { IsOptional, IsString, Matches, Min } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
+import { BadRequestException } from '@nestjs/common';
 
-export class PaginateQueryDto {
+export class PaginationQueryDto {
   @IsOptional()
+  @Type(() => Number)
   @Min(0)
   page: number;
 
@@ -20,7 +22,7 @@ export class PaginateQueryDto {
       try {
         return JSON.parse(value);
       } catch (err) {
-        return {};
+        throw new BadRequestException('Invalid where JSON format');
       }
     },
     { toClassOnly: true },
