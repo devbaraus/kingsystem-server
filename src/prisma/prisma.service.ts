@@ -72,8 +72,10 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       });
 
       return {
-        nextPage,
-        previousPage,
+        next: nextPage,
+        previous: previousPage,
+        page: `${pathname}?page=${page.toString()}`,
+        pages: Math.ceil(total / take),
         results,
         total,
       };
