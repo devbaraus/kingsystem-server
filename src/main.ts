@@ -11,10 +11,9 @@ async function bootstrap() {
     .setTitle('KingSystem API')
     .setDescription('A KingSystem API to control your system')
     .setVersion('v1')
-    .addTag('default')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('', app, document);
 
   app.use(
     morgan('tiny', { skip: () => process.env.NODE_ENV === 'production' }),
