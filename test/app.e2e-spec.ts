@@ -12,19 +12,19 @@ describe("AppController (e2e)", () => {
   let prisma: PrismaService;
   const authDto: SignAuthDto = {
     email: "mock@mock.com",
-    password: "MOCKpass1234)",
+    password: "MOCKpass1234)"
   };
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModule]
     }).compile();
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(
       new ValidationPipe({
-        whitelist: true,
-      }),
+        whitelist: true
+      })
     );
     await app.init();
     await app.listen(3333);
@@ -44,7 +44,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .post("/auth/signup")
           .withBody({
-            password: authDto.password,
+            password: authDto.password
           })
           .expectStatus(400);
       });
@@ -54,7 +54,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .post("/auth/signup")
           .withBody({
-            email: authDto.email,
+            email: authDto.email
           })
           .expectStatus(400);
       });
@@ -68,13 +68,14 @@ describe("AppController (e2e)", () => {
       });
     });
 
+
     describe("Signin", () => {
       it("should throw if email empty", () => {
         return pactum
           .spec()
           .post("/auth/signin")
           .withBody({
-            password: authDto.password,
+            password: authDto.password
           })
           .expectStatus(400);
       });
@@ -84,7 +85,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .post("/auth/signin")
           .withBody({
-            email: authDto.email,
+            email: authDto.email
           })
           .expectStatus(400);
       });
@@ -102,20 +103,18 @@ describe("AppController (e2e)", () => {
           .stores("userAt", "access_token");
       });
     });
-  });
 
-  describe("User", () => {
-    describe("Get me", () => {
+    describe("Get profile", () => {
       it("should throw if no auth", () => {
-        return pactum.spec().get("/user/me").expectStatus(401);
+        return pactum.spec().get("/auth/profile").expectStatus(401);
       });
 
       it("should get current user", () => {
         return pactum
           .spec()
-          .get("/user/me")
+          .get("/auth/profile")
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .expectStatus(200);
       });
@@ -128,7 +127,7 @@ describe("AppController (e2e)", () => {
         acronym: "MOCK",
         description: "Mock description",
         email: "system@mock.com",
-        url: "http://mock.com",
+        url: "http://mock.com"
       };
 
       it("should throw if no auth", () => {
@@ -140,10 +139,10 @@ describe("AppController (e2e)", () => {
           .spec()
           .post("/system")
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .withBody({
-            description: systemDto.description,
+            description: systemDto.description
           })
           .expectStatus(400);
       });
@@ -153,10 +152,10 @@ describe("AppController (e2e)", () => {
           .spec()
           .post("/system")
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .withBody({
-            acronym: systemDto.acronym,
+            acronym: systemDto.acronym
           })
           .expectStatus(400);
       });
@@ -166,7 +165,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .post("/system")
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .expectStatus(400);
       });
@@ -176,7 +175,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .post("/system")
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .withBody(systemDto)
           .expectStatus(201)
@@ -202,7 +201,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .get(`/system/1234567890`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .expectStatus(404);
       });
@@ -214,7 +213,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .get(`/system/${system?.id}`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .expectStatus(200)
           .expectBodyContains(system.id)
@@ -236,7 +235,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .get(`/system/?orderBy=blabla`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .expectStatus(400);
       });
@@ -246,7 +245,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .get(`/system/?where=null`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .expectStatus(400);
       });
@@ -256,7 +255,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .get(`/system/?where={}`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .expectStatus(200)
           .expectBodyContains("results")
@@ -272,7 +271,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .get(`/system/?where={"id":1}`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .expectStatus(200)
           .expectBodyContains("results")
@@ -288,7 +287,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .get(`/system/?where={"id":"blabla"}`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .expectStatus(400);
       });
@@ -298,7 +297,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .get(`/system/?page=-1`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .expectStatus(400);
       });
@@ -308,7 +307,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .get(`/system/?page=0`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .expectStatus(200)
           .expectBodyContains("results")
@@ -324,7 +323,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .get(`/system/?orderBy=acronym`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .expectStatus(200)
           .expectBodyContains("results")
@@ -340,7 +339,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .get(`/system/?orderBy=-acronym`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .expectStatus(200)
           .expectBodyContains("results")
@@ -356,7 +355,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .get(`/system/`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .expectStatus(200)
           .expectBodyContains("results")
@@ -375,7 +374,7 @@ describe("AppController (e2e)", () => {
         reason: "Mock reason",
         status: SystemStatus.CANCELED,
         email: "mock-system@mock.com",
-        url: "http://mock.com",
+        url: "http://mock.com"
       };
 
       it("should throw if no auth", async () => {
@@ -394,7 +393,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .put(`/system/${system?.id}`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .expectStatus(400);
       });
@@ -406,11 +405,11 @@ describe("AppController (e2e)", () => {
           .spec()
           .put(`/system/${system?.id}`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .withBody({
             ...updateSystemDto,
-            reason: undefined,
+            reason: undefined
           })
           .expectStatus(400);
       });
@@ -422,11 +421,11 @@ describe("AppController (e2e)", () => {
           .spec()
           .put(`/system/${system?.id}`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .withBody({
             ...updateSystemDto,
-            status: undefined,
+            status: undefined
           })
           .expectStatus(400);
       });
@@ -438,11 +437,11 @@ describe("AppController (e2e)", () => {
           .spec()
           .put(`/system/${system?.id}`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .withBody({
             ...updateSystemDto,
-            description: undefined,
+            description: undefined
           })
           .expectStatus(400);
       });
@@ -454,11 +453,11 @@ describe("AppController (e2e)", () => {
           .spec()
           .put(`/system/${system?.id}`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .withBody({
             ...updateSystemDto,
-            acronym: undefined,
+            acronym: undefined
           })
           .expectStatus(400);
       });
@@ -470,11 +469,11 @@ describe("AppController (e2e)", () => {
           .spec()
           .put(`/system/${system?.id}`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .withBody({
             ...updateSystemDto,
-            email: undefined,
+            email: undefined
           })
           .expectStatus(200);
       });
@@ -486,11 +485,11 @@ describe("AppController (e2e)", () => {
           .spec()
           .put(`/system/${system?.id}`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .withBody({
             ...updateSystemDto,
-            url: undefined,
+            url: undefined
           })
           .expectStatus(200);
       });
@@ -502,7 +501,7 @@ describe("AppController (e2e)", () => {
           .spec()
           .put(`/system/${system?.id}`)
           .withHeaders({
-            Authorization: "Bearer $S{userAt}",
+            Authorization: "Bearer $S{userAt}"
           })
           .withBody(updateSystemDto)
           .expectStatus(200)

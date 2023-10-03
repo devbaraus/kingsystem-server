@@ -1,0 +1,61 @@
+name: Test
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Run test suite
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_NAME: "kingsystem"
+      DATABASE_PASS: "kingsystem"
+      DATABASE_USER: "kingsystem"
+      DATABASE_PORT: 5432
+      DATABASE_HOST: db
+      JWT_SECRET: "secret"
+      JWT_EXPIRES_IN: "1d"
+      APP_PORT: 3000
+      APP_PAGE_SIZE: 10
+      COMPOSE_FILE: docker-compose.test.yml
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create .env file
+        run: |
+          echo "DATABASE_NAME=${DATABASE_NAME}" >> .env && \
+          echo "DATABASE_PASS=${DATABASE_PASS}" >> .env && \
+          echo "DATABASE_USER=${DATABASE_USER}" >> .env && \
+          echo "DATABASE_PORT=${DATABASE_PORT}" >> .env && \
+          echo "DATABASE_HOST=${DATABASE_HOST}" >> .env && \
+          echo "DATABASE_URL=\"postgresql://${DATABASE_USER}:${DATABASE_PASS}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?schema=public\"" >> .env && \
+          echo "JWT_SECRET=${JWT_SECRET}" >> .env && \
+          echo "JWT_EXPIRES_IN=${JWT_EXPIRES_IN}" >> .env && \
+          echo "APP_PORT=${APP_PORT}" >> .env && \
+          echo "APP_PAGE_SIZE=${APP_PAGE_SIZE}" >> .env
+
+      - name: Create coverage directory
+        run: |
+          mkdir test/coverage && \
+          sudo chown -R $USER:$USER test/coverage && \
+          sudo chmod -R 777 test/coverage
+
+      - name: Build docker images
+        run: docker compose build
+
+      - name: Run tests
+        run: docker compose run nest
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          directory: ./test/coverage
+          name: codecov-umbrella
+          fail_ci_if_error: true
+          verbose: true

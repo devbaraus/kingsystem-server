@@ -17,10 +17,10 @@ jobs:
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_PRIVATE_KEY }}
           script: |
-            cd /home/${{ secrets.VM_USER }}/kingsystem-server \
-            && git checkout main \
-            && git pull \
-            && docker compose build \
-            && docker compose down \
+            cd /home/${{ secrets.VM_USER }}/kingsystem-server && \
+            && git checkout main && \
+            && git pull && \
+            && docker compose build && \
+            && docker compose down && \
             && docker compose up -d
 

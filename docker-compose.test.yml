@@ -20,8 +20,7 @@ services:
     working_dir: /app
     command: sh -c "npm run prisma:reset && npm run test:e2e"
     volumes:
-      - .:/app
-      - ./logs:/root/.npm/_logs
+      - ./test:/app/test
 
 volumes:
   kingsystem_db_test:
