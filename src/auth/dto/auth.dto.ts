@@ -1,10 +1,6 @@
-import { IsEmail, IsNotEmpty, IsStrongPassword } from 'class-validator';
+import { UserDto } from '../../user/dto';
 
 export class AuthDto {
-  @IsEmail()
-  email: string;
-
-  @IsStrongPassword()
-  @IsNotEmpty()
-  password: string;
+  access_token: string;
+  user: UserDto;
 }
