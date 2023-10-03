@@ -82,17 +82,4 @@ export class SystemService {
       throw new BadRequestException('Something went wrong');
     }
   }
-
-  async delete(id: string) {
-    try {
-      await this.prisma.system.delete({
-        where: {
-          id: parseInt(id),
-        },
-      });
-    } catch (err) {
-      console.log(err);
-      throw new BadRequestException('Something went wrong');
-    }
-  }
 }
