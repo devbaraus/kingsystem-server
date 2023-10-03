@@ -45,7 +45,7 @@ jobs:
           sudo chmod -R 777 test/coverage
 
       - name: Build docker images
-        run: docker compose build
+        run: docker compose build test
 
       - name: Run tests
         run: docker compose run test
