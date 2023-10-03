@@ -6,9 +6,9 @@ import {
   IsString,
   IsUrl,
   MaxLength,
-} from 'class-validator';
-import { SystemStatus } from '@prisma/client';
-import { ApiProperty } from '@nestjs/swagger';
+} from "class-validator";
+import { SystemStatus } from "@prisma/client";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class UpdateSystemDto {
   @IsString()

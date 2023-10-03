@@ -4,13 +4,13 @@ import {
   ForbiddenException,
   Injectable,
   UnauthorizedException,
-} from '@nestjs/common';
-import * as argon from 'argon2';
-import { Prisma, User } from '@prisma/client';
-import { PrismaService } from '../prisma/prisma.service';
-import { SignAuthDto } from './dto';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
+} from "@nestjs/common";
+import * as argon from "argon2";
+import { Prisma, User } from "@prisma/client";
+import { PrismaService } from "../prisma/prisma.service";
+import { SignAuthDto } from "./dto";
+import { JwtService } from "@nestjs/jwt";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class AuthService {
@@ -28,7 +28,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new ForbiddenException('Invalid credentials');
+      throw new ForbiddenException("Invalid credentials");
     }
 
     const valid = await argon.verify(user.passwordHash, dto.password);
@@ -54,12 +54,12 @@ export class AuthService {
       return this.signToken(user);
     } catch (err) {
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
-        if (err.code === 'P2002') {
-          throw new ConflictException('Credentials taken');
+        if (err.code === "P2002") {
+          throw new ConflictException("Credentials taken");
         }
       }
 
-      throw new BadRequestException('Something went wrong');
+      throw new BadRequestException("Something went wrong");
     }
   }
 
@@ -70,8 +70,8 @@ export class AuthService {
         email: user.email,
       },
       {
-        secret: this.config.get('JWT_SECRET'),
-        expiresIn: this.config.get('JWT_EXPIRES_IN'),
+        secret: this.config.get("JWT_SECRET"),
+        expiresIn: this.config.get("JWT_EXPIRES_IN"),
       },
     );
 

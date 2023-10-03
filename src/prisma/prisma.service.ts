@@ -1,6 +1,6 @@
-import { BadRequestException, Injectable, OnModuleInit } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
-import { ConfigService } from '@nestjs/config';
+import { BadRequestException, Injectable, OnModuleInit } from "@nestjs/common";
+import { Prisma, PrismaClient } from "@prisma/client";
+import { ConfigService } from "@nestjs/config";
 
 export interface PaginatorQuery {
   page: number;
@@ -28,16 +28,12 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     try {
       const { page = 0, where } = query;
 
-      const take = Number(this.config.get('APP_PAGE_SIZE', 10));
+      const take = Number(this.config.get("APP_PAGE_SIZE", 10));
       const skip = page * take;
       const orderBy: {
-        [key: string]: 'asc' | 'desc';
+        [key: string]: "asc" | "desc";
       } = {
-        [query.orderBy?.replace('-', '') ?? 'id']: query.orderBy?.startsWith(
-          '-',
-        )
-          ? 'desc'
-          : 'asc',
+        [query.orderBy?.replace("-", "") ?? "id"]: query.orderBy?.startsWith("-") ? "desc" : "asc",
       };
 
       const total = await model.count({ where });
@@ -50,16 +46,14 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 
       if (nextPageNumber) {
         const nextPageSearchParams = new URLSearchParams();
-        nextPageNumber &&
-          nextPageSearchParams.set('page', nextPageNumber.toString());
+        nextPageNumber && nextPageSearchParams.set("page", nextPageNumber.toString());
 
         nextPage = `${pathname}?${nextPageSearchParams.toString()}`;
       }
 
       if (previousPageNumber) {
         const previousPageSearchParams = new URLSearchParams();
-        previousPageNumber &&
-          previousPageSearchParams.set('page', previousPageNumber.toString());
+        previousPageNumber && previousPageSearchParams.set("page", previousPageNumber.toString());
 
         previousPage = `${pathname}?${previousPageSearchParams.toString()}`;
       }
@@ -81,7 +75,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       };
     } catch (e) {
       if (e instanceof Prisma.PrismaClientValidationError) {
-        throw new BadRequestException('Provided query is invalid');
+        throw new BadRequestException("Provided query is invalid");
       }
       throw e;
     }
