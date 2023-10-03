@@ -16,10 +16,9 @@ jobs:
       DATABASE_PORT: 5432
       DATABASE_HOST: db
       DATABASE_URL: "postgresql://${DATABASE_USER}:${DATABASE_PASS}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?schema=public"
-
       JWT_SECRET: "secret"
       JWT_EXPIRES_IN: "1d"
-
+      APP_PORT: 3000
       APP_PAGE_SIZE: 10
       COMPOSE_FILE: docker-compose.test.yml
 
