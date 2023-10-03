@@ -18,6 +18,8 @@ services:
       target: development
     working_dir: /app
     command: sh -c "npm run prisma:migrate && npm run start:dev"
+    ports:
+      - ${APP_PORT}:${APP_PORT}
     volumes:
       - .:/app
 

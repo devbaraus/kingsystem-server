@@ -12,6 +12,8 @@ services:
       file: docker-common.yml
       service: nest
     command: sh -c "npx prisma migrate deploy && node dist/main.js"
+    ports:
+      - ${APP_PORT}:${APP_PORT}
 
 volumes:
   kingsystem_db:

@@ -19,8 +19,6 @@ services:
     container_name: kingsystem_nest
     restart: unless-stopped
     env_file: .env
-    ports:
-      - ${APP_PORT}:${APP_PORT}
     environment:
       - DATABASE_HOST=db
     depends_on:
