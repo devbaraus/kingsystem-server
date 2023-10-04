@@ -32,8 +32,9 @@ export class UpdateSystemDto {
   url: string;
 
   @IsString()
+  @IsNotEmpty()
   @MaxLength(500)
-  reason: string;
+  updateReason: string;
 
   @IsEnum(SystemStatus)
   @ApiProperty({ enum: SystemStatus })

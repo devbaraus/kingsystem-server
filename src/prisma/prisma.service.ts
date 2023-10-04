@@ -37,9 +37,10 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       };
 
       const total = await model.count({ where });
+      const totalPages = Math.ceil(total / take);
 
-      const nextPageNumber = skip + take < total ? skip + take : null;
-      const previousPageNumber = skip > 0 ? skip - take : null;
+      const nextPageNumber = page < totalPages ? page + 1 : null;
+      const previousPageNumber = page > 0 ? page - 1 : null;
 
       let nextPage = null;
       let previousPage = null;
@@ -58,7 +59,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         previousPage = `${pathname}?${previousPageSearchParams.toString()}`;
       }
 
-      const results: T[] = await model.findMany({
+      const data: T[] = await model.findMany({
         skip,
         take,
         orderBy,
@@ -69,8 +70,8 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         next: nextPage,
         previous: previousPage,
         page: `${pathname}?page=${page.toString()}`,
-        pages: Math.ceil(total / take),
-        results,
+        pages: totalPages,
+        data,
         total,
       };
     } catch (e) {

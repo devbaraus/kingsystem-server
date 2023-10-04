@@ -19,6 +19,8 @@ export class PaginationQueryDto {
   @Type(() => Object)
   @Transform(
     ({ value }) => {
+      if (value instanceof Object) return value;
+
       try {
         return JSON.parse(value);
       } catch (err) {
