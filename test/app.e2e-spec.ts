@@ -5,7 +5,7 @@ import { SignInAuthDto, SignUpAuthDto } from "../src/auth/dto";
 import { AppModule } from "../src/app.module";
 import { CreateSystemDto, UpdateSystemDto } from "../src/system/dto";
 import { PrismaService } from "../src/prisma/prisma.service";
-import { System, SystemStatus } from "@prisma/client";
+import { System, SystemStatus, User } from "@prisma/client";
 
 describe("AppController (e2e)", () => {
   let app: INestApplication;
@@ -276,7 +276,7 @@ describe("AppController (e2e)", () => {
             Authorization: "Bearer $S{userAt}",
           })
           .expectStatus(200)
-          .expectBodyContains("results")
+          .expectBodyContains("data")
           .expectBodyContains("total")
           .expectBodyContains("page")
           .expectBodyContains("pages")
@@ -292,7 +292,7 @@ describe("AppController (e2e)", () => {
             Authorization: "Bearer $S{userAt}",
           })
           .expectStatus(200)
-          .expectBodyContains("results")
+          .expectBodyContains("data")
           .expectBodyContains("total")
           .expectBodyContains("page")
           .expectBodyContains("pages")
@@ -328,7 +328,7 @@ describe("AppController (e2e)", () => {
             Authorization: "Bearer $S{userAt}",
           })
           .expectStatus(200)
-          .expectBodyContains("results")
+          .expectBodyContains("data")
           .expectBodyContains("total")
           .expectBodyContains("page")
           .expectBodyContains("pages")
@@ -344,7 +344,7 @@ describe("AppController (e2e)", () => {
             Authorization: "Bearer $S{userAt}",
           })
           .expectStatus(200)
-          .expectBodyContains("results")
+          .expectBodyContains("data")
           .expectBodyContains("total")
           .expectBodyContains("page")
           .expectBodyContains("pages")
@@ -360,7 +360,7 @@ describe("AppController (e2e)", () => {
             Authorization: "Bearer $S{userAt}",
           })
           .expectStatus(200)
-          .expectBodyContains("results")
+          .expectBodyContains("data")
           .expectBodyContains("total")
           .expectBodyContains("page")
           .expectBodyContains("pages")
@@ -376,7 +376,7 @@ describe("AppController (e2e)", () => {
             Authorization: "Bearer $S{userAt}",
           })
           .expectStatus(200)
-          .expectBodyContains("results")
+          .expectBodyContains("data")
           .expectBodyContains("total")
           .expectBodyContains("page")
           .expectBodyContains("pages")
@@ -389,7 +389,7 @@ describe("AppController (e2e)", () => {
       const updateSystemDto: UpdateSystemDto = {
         acronym: "MOCK",
         description: "Mock description",
-        updateReason: "Mock reason",
+        updateReason: "Mock update reason",
         status: SystemStatus.CANCELED,
         email: "mock-system@mock.com",
         url: "http://mock.com",
@@ -529,6 +529,188 @@ describe("AppController (e2e)", () => {
           .expectBodyContains(updateSystemDto.status)
           .expectBodyContains(updateSystemDto.email)
           .expectBodyContains(updateSystemDto.url);
+      });
+    });
+  });
+
+  describe("User", () => {
+    describe("Get User", () => {
+      it("should throw if no auth", async () => {
+        const user = await prisma.user.findFirst();
+
+        return pactum
+          .spec()
+          .get(`/user/${user?.id}`)
+          .expectStatus(401);
+      });
+
+      it("should throw if not exist", async () => {
+        return pactum
+          .spec()
+          .get(`/user/1234567890`)
+          .withHeaders({
+            Authorization: "Bearer $S{userAt}",
+          })
+          .expectStatus(404);
+      });
+
+      it("should get system", async () => {
+        const user = (await prisma.user.findFirst()) as User;
+
+        return pactum
+          .spec()
+          .get(`/user/${user?.id}`)
+          .withHeaders({
+            Authorization: "Bearer $S{userAt}",
+          })
+          .expectStatus(200)
+          .expectBodyContains(user.id)
+          .expectBodyContains(user.name)
+          .expectBodyContains(user.email)
+          .expectBodyContains(user.createdAt)
+          .expectBodyContains(user.updatedAt);
+      });
+    });
+
+    describe("List Users", () => {
+      it("should throw if no auth", async () => {
+        return pactum.spec().get(`/user`).expectStatus(401);
+      });
+
+      it("should throw if no with existing orderBy", async () => {
+        return pactum
+          .spec()
+          .get(`/user/?orderBy=blabla`)
+          .withHeaders({
+            Authorization: "Bearer $S{userAt}",
+          })
+          .expectStatus(400);
+      });
+
+      it("should throw if where not object", async () => {
+        return pactum
+          .spec()
+          .get(`/user/?where=null`)
+          .withHeaders({
+            Authorization: "Bearer $S{userAt}",
+          })
+          .expectStatus(400);
+      });
+
+      it("should list if where is object", async () => {
+        return pactum
+          .spec()
+          .get(`/user/?where={}`)
+          .withHeaders({
+            Authorization: "Bearer $S{userAt}",
+          })
+          .expectStatus(200)
+          .expectBodyContains("data")
+          .expectBodyContains("total")
+          .expectBodyContains("page")
+          .expectBodyContains("pages")
+          .expectBodyContains("next")
+          .expectBodyContains("previous");
+      });
+
+      it("should list if where is valid object", async () => {
+        return pactum
+          .spec()
+          .get(`/user/?where={"id":1}`)
+          .withHeaders({
+            Authorization: "Bearer $S{userAt}",
+          })
+          .expectStatus(200)
+          .expectBodyContains("data")
+          .expectBodyContains("total")
+          .expectBodyContains("page")
+          .expectBodyContains("pages")
+          .expectBodyContains("next")
+          .expectBodyContains("previous");
+      });
+
+      it("should list if where is invalid object", async () => {
+        return pactum
+          .spec()
+          .get(`/user/?where={"id":"blabla"}`)
+          .withHeaders({
+            Authorization: "Bearer $S{userAt}",
+          })
+          .expectStatus(400);
+      });
+
+      it("should throw if page negative", async () => {
+        return pactum
+          .spec()
+          .get(`/user/?page=-1`)
+          .withHeaders({
+            Authorization: "Bearer $S{userAt}",
+          })
+          .expectStatus(400);
+      });
+
+      it("should list systems with page zero", async () => {
+        return pactum
+          .spec()
+          .get(`/user/?page=0`)
+          .withHeaders({
+            Authorization: "Bearer $S{userAt}",
+          })
+          .expectStatus(200)
+          .expectBodyContains("data")
+          .expectBodyContains("total")
+          .expectBodyContains("page")
+          .expectBodyContains("pages")
+          .expectBodyContains("next")
+          .expectBodyContains("previous");
+      });
+
+      it("should list systems with existing orderBy asc", async () => {
+        return pactum
+          .spec()
+          .get(`/user/?orderBy=email`)
+          .withHeaders({
+            Authorization: "Bearer $S{userAt}",
+          })
+          .expectStatus(200)
+          .expectBodyContains("data")
+          .expectBodyContains("total")
+          .expectBodyContains("page")
+          .expectBodyContains("pages")
+          .expectBodyContains("next")
+          .expectBodyContains("previous");
+      });
+
+      it("should list systems with existing orderBy desc", async () => {
+        return pactum
+          .spec()
+          .get(`/system/?orderBy=-email`)
+          .withHeaders({
+            Authorization: "Bearer $S{userAt}",
+          })
+          .expectStatus(200)
+          .expectBodyContains("data")
+          .expectBodyContains("total")
+          .expectBodyContains("page")
+          .expectBodyContains("pages")
+          .expectBodyContains("next")
+          .expectBodyContains("previous");
+      });
+
+      it("should list systems", async () => {
+        return pactum
+          .spec()
+          .get(`/user/`)
+          .withHeaders({
+            Authorization: "Bearer $S{userAt}",
+          })
+          .expectStatus(200)
+          .expectBodyContains("data")
+          .expectBodyContains("total")
+          .expectBodyContains("page")
+          .expectBodyContains("pages")
+          .expectBodyContains("next")
+          .expectBodyContains("previous");
       });
     });
   });
