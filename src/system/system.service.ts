@@ -63,10 +63,7 @@ export class SystemService {
           id: parseInt(id),
         },
         data: {
-          email: dto.email,
-          url: dto.url,
-          updateReason: dto.reason,
-          status: dto.status,
+          ...dto,
           updatedById: currentUserId,
         },
       });
