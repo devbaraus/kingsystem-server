@@ -23,6 +23,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("", app, document);
 
+  app.enableCors();
   app.use(morgan("tiny", { skip: () => process.env.NODE_ENV === "production" }));
 
   const { httpAdapter } = app.get(HttpAdapterHost);
