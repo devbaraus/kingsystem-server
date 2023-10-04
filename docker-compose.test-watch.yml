@@ -5,8 +5,23 @@ services:
     extends:
       file: docker-common.yml
       service: db
+    ports:
+      - ${DATABASE_PORT}:5432
     volumes:
       - kingsystem_db_test:/var/lib/postgresql/data
+  nest:
+    extends:
+      file: docker-common.yml
+      service: nest
+    build:
+      context: .
+      target: development
+    working_dir: /app
+    command: sh -c "npm run prisma:migrate && npm run start:dev"
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    volumes:
+      - .:/app
   test:
     extends:
       file: docker-common.yml
@@ -17,7 +32,7 @@ services:
       target: development
     restart: no
     working_dir: /app
-    command: sh -c "npm run prisma:reset && npm run test:e2e"
+    command: sh -c "npm run prisma:reset && npm run test:e2e-watch"
     volumes:
       - ./test:/app/test
 
