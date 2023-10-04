@@ -24,7 +24,7 @@ async function bootstrap() {
   SwaggerModule.setup("", app, document);
 
   app.enableCors();
-  app.use(morgan("tiny", { skip: () => process.env.NODE_ENV === "production" }));
+  app.use(morgan("tiny"));
 
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new SentryFilter(httpAdapter));
