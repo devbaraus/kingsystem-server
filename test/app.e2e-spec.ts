@@ -389,7 +389,7 @@ describe("AppController (e2e)", () => {
       const updateSystemDto: UpdateSystemDto = {
         acronym: "MOCK",
         description: "Mock description",
-        reason: "Mock reason",
+        updateReason: "Mock reason",
         status: SystemStatus.CANCELED,
         email: "mock-system@mock.com",
         url: "http://mock.com",
@@ -427,7 +427,7 @@ describe("AppController (e2e)", () => {
           })
           .withBody({
             ...updateSystemDto,
-            reason: undefined,
+            updateReason: undefined,
           })
           .expectStatus(400);
       });
@@ -525,7 +525,7 @@ describe("AppController (e2e)", () => {
           .expectStatus(200)
           .expectBodyContains(updateSystemDto.acronym)
           .expectBodyContains(updateSystemDto.description)
-          .expectBodyContains(updateSystemDto.reason)
+          .expectBodyContains(updateSystemDto.updateReason)
           .expectBodyContains(updateSystemDto.status)
           .expectBodyContains(updateSystemDto.email)
           .expectBodyContains(updateSystemDto.url);
