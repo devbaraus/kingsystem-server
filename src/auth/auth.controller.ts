@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { AuthDto, SignInAuthDto, SignUpAuthDto, UserDto } from "./dto";
+import { AuthDto, SignInAuthDto, SignUpAuthDto } from "./dto";
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
@@ -13,8 +13,8 @@ import {
 
 import { GetUser } from "./decorator";
 import { User } from "@prisma/client";
-import { AuthGuard } from "@nestjs/passport";
 import { JwtGuard } from "./guard";
+import { UserDto } from "../user/dto";
 
 @ApiTags("auth")
 @Controller("auth")
