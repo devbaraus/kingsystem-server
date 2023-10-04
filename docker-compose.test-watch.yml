@@ -17,7 +17,7 @@ services:
       context: .
       target: development
     working_dir: /app
-    command: sh -c "npm run prisma:migrate && npm run start:dev"
+    command: sh -c "npm ci && npm run prisma:migrate && npm run start:dev"
     ports:
       - ${APP_PORT}:${APP_PORT}
     volumes:
@@ -32,7 +32,7 @@ services:
       target: development
     restart: no
     working_dir: /app
-    command: sh -c "npm run prisma:reset && npm run test:e2e-watch"
+    command: sh -c "npm ci && npm run prisma:reset && npm run test:e2e-watch"
     volumes:
       - .:/app
 
